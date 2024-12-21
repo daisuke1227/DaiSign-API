@@ -1,6 +1,6 @@
 # IPA Signing API
 
-Welcome to the IPA Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
+Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
 
 ## Features
 - Upload IPA files for signing.
