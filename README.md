@@ -74,9 +74,112 @@ axios.post('https://api.ipasign.pro/sign', form, {
 .then(response => console.log(response.data))
 .catch(error => console.error(error));
 ```
-### Example Response
 
-```{
+HTML/JS (use for websites and a starting base)
+```<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA Signer</title>
+</head>
+<body>
+    <h2>IPA Signer</h2>
+    <form id="signForm" action="https://api.ipasign.pro/sign" method="POST" enctype="multipart/form-data">
+        <p>
+            <label for="ipa">IPA File (.ipa) <small>(Optional)</small></label><br>
+            <input type="file" id="ipa" name="ipa" accept=".ipa">
+        </p>
+        <p>
+            <label for="p12">Certificate File (.p12) <small>(Required)</small></label><br>
+            <input type="file" id="p12" name="p12" accept=".p12" required>
+        </p>
+        <p>
+            <label for="mobileprovision">Provisioning Profile (.mobileprovision) <small>(Required)</small></label><br>
+            <input type="file" id="mobileprovision" name="mobileprovision" accept=".mobileprovision" required>
+        </p>
+        <p>
+            <label for="p12_password">P12 Password <small>(Optional)</small></label><br>
+            <input type="password" id="p12_password" name="p12_password" placeholder="Enter P12 Password">
+        </p>
+        <p>
+            <button type="submit">Sign IPA</button>
+        </p>
+    </form>
+
+    <!-- Popup container -->
+    <div id="popupContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("signForm");
+
+            const popupContainer = document.getElementById("popupContainer");
+
+            const adjustPopupSize = () => {
+                popupContainer.style.width = window.innerWidth < 600 ? "80%" : "400px";
+                popupContainer.style.maxWidth = "90%";
+                popupContainer.style.top = "50%";
+                popupContainer.style.left = "50%";
+                popupContainer.style.transform = "translate(-50%, -50%)";
+                popupContainer.style.position = "fixed";
+                popupContainer.style.backgroundColor = "#fff";
+                popupContainer.style.border = "1px solid #ccc";
+                popupContainer.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.2)";
+                popupContainer.style.zIndex = "1000";
+                popupContainer.style.padding = "10px";
+                popupContainer.style.textAlign = "center";
+            };
+
+            window.addEventListener("resize", adjustPopupSize);
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Failed to sign the IPA. Please try again.");
+                    }
+
+                    const data = await response.json();
+
+                    if (data.installLink) {
+                        popupContainer.innerHTML = `
+                            <h3>Signing Complete</h3>
+                            <p>Your signed IPA is ready. Click the link below to install:</p>
+                            <a href="${data.installLink}" target="_blank">${data.installLink}</a>
+                            <br><br>
+                            <button onclick="document.getElementById('popupContainer').style.display='none'">Close</button>
+                        `;
+                        popupContainer.style.display = "block";
+                        adjustPopupSize();
+                    } else {
+                        throw new Error("Invalid response from the server.");
+                    }
+                } catch (error) {
+                    popupContainer.innerHTML = `
+                        <h3>Error</h3>
+                        <p>${error.message}</p>
+                        <button onclick="document.getElementById('popupContainer').style.display='none'">Close</button>
+                    `;
+                    popupContainer.style.display = "block";
+                    adjustPopupSize();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+```
+### Example Response
+```
+{
   "installLink": "itms-services://?action=download-manifest&url=https://api.ipasign.pro/plist/example.plist"
 }
 ```
