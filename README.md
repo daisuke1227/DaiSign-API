@@ -27,7 +27,9 @@ sudo su -c "apt-get install git -y && git clone https://github.com/zhlynn/zsign.
       ```bash
       npm install
       ```
-      6. Your all done yay! now run it
+      6. rename .env and put all your configuration in there  
+   
+      7. Your all done yay! now run it
          ```bash
          node app.js
          ```
