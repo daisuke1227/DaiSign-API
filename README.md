@@ -104,5 +104,5 @@ Credits
 
 Questions or Issues?
 
-If you have any questions or run into issues, feel free to reach out to Daisuke at your_email@example.com.
+If you have any questions or run into issues, feel free to reach out to Daisuke on [Discord](https://discord.com/users/630151942135480370) or [Telegram](https://t.me/dai1228)
 
