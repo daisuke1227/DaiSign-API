@@ -75,8 +75,9 @@ axios.post('https://api.ipasign.pro/sign', form, {
 .catch(error => console.error(error));
 ```
 
-HTML/JS (use for websites and a starting base)
-```<!DOCTYPE html>
+### HTML/JS (use for websites and a starting base)
+```
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
