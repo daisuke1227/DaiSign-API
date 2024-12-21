@@ -5,30 +5,30 @@
 ## HOW TO INSTALL
 
 1. Install Zsign
-```
+```bash
 sudo su -c "apt-get install git -y && git clone https://github.com/zhlynn/zsign.git && cd zsign && chmod +x INSTALL.sh && ./INSTALL.sh && cd build && cp zsign /usr/local/bin"
 ```
 
 2. Clone this repo
-   ```
+   ```bash
    git clone https://github.com/daisuke1227/DaiSign-API.git
    ```
 3. Install NodeJS/NPM
-   ```
+   ```bash
    sudo apt install nodejs -y
    sudo apt install npm -y
    ```
    4. Update NodeJS
-      ```
+      ```bash
       npm install -g n
       n latest
       ```
    5. Install Node modules
-      ```
+      ```bash
       npm install
       ```
       6. Your all done yay! now run it
-         ```
+         ```bash
          node app.js
          ```
 Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
@@ -73,7 +73,7 @@ curl -X POST https://api.ipasign.pro/sign \
 -F "p12_password=your_password"
 ```
 ### Python
-```
+```python
 import requests
 
 url = "https://api.ipasign.pro/sign"
@@ -88,7 +88,7 @@ response = requests.post(url, files=files, data=data)
 print(response.json())
 ```
 ### JavaScript (Node.js) 
-```
+```javascript
 const FormData = require('form-data');
 const axios = require('axios');
 const fs = require('fs');
@@ -107,7 +107,7 @@ axios.post('https://api.ipasign.pro/sign', form, {
 ```
 
 ### HTML/JS (use for websites and a starting base)
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
