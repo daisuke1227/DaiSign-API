@@ -2,6 +2,35 @@
 
 ## Max IPA upload size is 2GB you can change that in the code if you wanna use it for your own site/locally
 
+## HOW TO INSTALL
+
+1. Install Zsign
+```
+sudo su -c "apt-get install git -y && git clone https://github.com/zhlynn/zsign.git && cd zsign && chmod +x INSTALL.sh && ./INSTALL.sh && cd build && cp zsign /usr/local/bin"
+```
+
+2. Clone this repo
+   ```
+   git clone https://github.com/daisuke1227/DaiSign-API.git
+   ```
+3. Install NodeJS/NPM
+   ```
+   sudo apt install nodejs -y
+   sudo apt install npm -y
+   ```
+   4. Update NodeJS
+      ```
+      npm install -g n
+      n latest
+      ```
+   5. Install Node modules
+      ```
+      npm install
+      ```
+      6. Your all done yay! now run it
+         ```
+         node app.js
+         ```
 Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
 
 ## Features
