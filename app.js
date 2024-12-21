@@ -39,10 +39,18 @@ if (!ENCRYPTION_KEY || Buffer.from(ENCRYPTION_KEY, 'hex').length !== 32) {
   process.exit(1);
 }
 
-// Ensure the default IPA exists
-if (!fs.existsSync(DEFAULT_IPA_PATH)) {
-  console.error(`Error: Default IPA not found at path: ${DEFAULT_IPA_PATH}`);
-  process.exit(1);
+/**
+ * Instead of requiring the default IPA to exist, we only note its availability
+ * and will use it **only if** it actually exists at runtime.
+ */
+let defaultIpaAvailable = false;
+if (fs.existsSync(DEFAULT_IPA_PATH)) {
+  defaultIpaAvailable = true;
+  console.log(`Default IPA found at: ${DEFAULT_IPA_PATH}`);
+} else {
+  console.warn(
+    `Warning: Default IPA not found at path: ${DEFAULT_IPA_PATH}. It will not be used if no IPA is uploaded.`
+  );
 }
 
 // Main working directory (uploads)
@@ -333,15 +341,25 @@ app.post(
         });
       }
 
-      // 2. IPA path (custom or default)
+      // 2. IPA path (custom or default) — but only use default if it exists
       if (req.files.ipa) {
         uniqueSuffix = generateRandomSuffix();
         ipaPath = path.join(WORK_DIR, 'temp', `input_${uniqueSuffix}.ipa`);
         await fsp.rename(req.files.ipa[0].path, ipaPath);
         logger.info(`Received IPA: ${req.files.ipa[0].originalname}`);
       } else {
-        ipaPath = DEFAULT_IPA_PATH;
-        logger.info(`No IPA uploaded. Using default IPA: ${ipaPath}`);
+        // If no custom IPA, check if our optional default is available
+        if (defaultIpaAvailable) {
+          ipaPath = DEFAULT_IPA_PATH;
+          logger.info(`No IPA uploaded. Using default IPA: ${ipaPath}`);
+        } else {
+          // Decide how you want to handle the case where neither an IPA is uploaded
+          // nor a default IPA is available. Here we return an error.
+          return res.status(400).json({
+            error:
+              'No IPA was uploaded, and no default IPA is available on the server.',
+          });
+        }
       }
 
       // 3. p12 & mobileprovision
@@ -473,8 +491,16 @@ app.post(
         plistData.CFBundleDisplayName || plistData.CFBundleName || 'App';
 
       // 9. Generate manifest plist & install link
-      const ipaUrl = new URL(`signed/${path.basename(signedIpaPath)}`, UPLOAD_URL).toString();
-      const manifest = generateManifestPlist(ipaUrl, bundleId, bundleVersion, displayName);
+      const ipaUrl = new URL(
+        `signed/${path.basename(signedIpaPath)}`,
+        UPLOAD_URL
+      ).toString();
+      const manifest = generateManifestPlist(
+        ipaUrl,
+        bundleId,
+        bundleVersion,
+        displayName
+      );
 
       const filename = `${sanitizeFilename(displayName)}_${uniqueSuffix}.plist`;
       const plistSavePath = path.join(WORK_DIR, 'plist', filename);
