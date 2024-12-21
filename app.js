@@ -18,7 +18,7 @@ app.use(cors()); // Allow all origins
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Hardcoded Configuration Variables
-const UPLOAD_URL = 'https://api.ipasign.pro/'; // Update to your actual domain
+const UPLOAD_URL = 'https://yoursite.com/'; // Update to your actual domain
 const WORK_DIR = path.join(__dirname, 'uploads'); // Ensure this directory exists or will be created
 const ENCRYPTION_KEY = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'; // 64-character hex string (32 bytes)
 
