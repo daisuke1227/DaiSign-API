@@ -1,4 +1,4 @@
-# IPA Signing API
+# IPA Signing API (ALL CODE WAS WRITTEN USING CHATGPT O1 MINI/O1 shoutout to you :3)
 
 Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
 
@@ -13,7 +13,7 @@ Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` 
 3. Receive an install link to download and install the signed app.
 
 ### Using this locally
-If you wanna use this for your own site then change the name of the app.js and just follow the tutorial using your own site (this part was written by Daisuke after post)
+If you wanna use this for your own site then change this line of the app.js ```const UPLOAD_URL = 'https://yoursite.com/'; // Update to your actual domain``` and just follow the tutorial using your own site (this part was written by Daisuke after post) 
 
 ## API Endpoint
 
