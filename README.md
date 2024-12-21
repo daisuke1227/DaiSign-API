@@ -15,6 +15,9 @@ Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` 
 ### Using this locally
 If you wanna use this for your own site then change this line of the app.js ```const UPLOAD_URL = 'https://yoursite.com/'; // Update to your actual domain``` and just follow the tutorial using your own site (this part was written by Daisuke after post) 
 
+### Changing default IPA
+In the app.js code if you dont upload an ipa a ipa will automatically be used you can change that in ```const DEFAULT_IPA_PATH = path.join(__dirname, 'Portal-1.9.0.ipa'); // Ensure this file exists``` this checks if the ipa is even there so if someone doesnt upload an ipa this ipa will be used lol in your code you can make the ipa required so you can bypass this
+
 ## API Endpoint
 
 ### POST `/sign`
