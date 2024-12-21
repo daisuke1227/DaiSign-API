@@ -1,5 +1,7 @@
 # IPA Signing API (ALL CODE WAS WRITTEN USING CHATGPT O1 MINI/O1 shoutout to you :3)
 
+## Max IPA upload size is 2GB you can change that in the code if you wanna use it for your own site/locally
+
 Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
 
 ## Features
