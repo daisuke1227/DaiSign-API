@@ -12,6 +12,9 @@ Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` 
 2. The server processes the files and signs the IPA.
 3. Receive an install link to download and install the signed app.
 
+### Using this locally
+If you wanna use this for your own site then change the name of the app.js and just follow the tutorial using your own site (this part was written by Daisuke after post)
+
 ## API Endpoint
 
 ### POST `/sign`
