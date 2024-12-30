@@ -17,7 +17,7 @@ const { exec } = require('child_process');
 
   try {
     // Build zsign command
-    let zsignCmd = `zsign -c 5 -k "${p12Path}" `;
+    let zsignCmd = `zsign -z 5 -k "${p12Path}" `;
     if (p12Password) {
       zsignCmd += `-p "${p12Password}" `;
     }
