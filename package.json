@@ -1,5 +1,5 @@
 {
-  "name": "DaiSign-API",
+  "name": "daisign-api",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -12,9 +12,22 @@
     "adm-zip": "^0.5.16",
     "bplist-parser": "^0.3.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
     "multer": "^1.4.5-lts.1",
-    "plist": "^3.1.0"
+    "plist": "^3.1.0",
+    "winston": "^3.17.0"
   },
-  "description": ""
+  "description": "## Max IPA upload size is 2GB you can change that in the code if you wanna use it for your own site/locally",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daisuke1227/DaiSign-API.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daisuke1227/DaiSign-API/issues"
+  },
+  "homepage": "https://github.com/daisuke1227/DaiSign-API#readme"
 }
