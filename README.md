@@ -12,6 +12,7 @@ sudo su -c "apt-get install git -y && git clone https://github.com/zhlynn/zsign.
 2. Clone this repo
    ```bash
    git clone https://github.com/daisuke1227/DaiSign-API.git
+   cd DaiSign-API
    ```
 3. Install NodeJS/NPM
    ```bash
