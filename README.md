@@ -6,7 +6,7 @@
 
 1. Install Zsign
 ```bash
-sudo su -c "apt-get install git -y && git clone https://github.com/zhlynn/zsign.git && cd zsign && chmod +x INSTALL.sh && ./INSTALL.sh && cd build && cp zsign /usr/local/bin"
+sudo su -c "apt-get install git -y && git clone https://github.com/zhlynn/zsign.git && cd zsign/src && chmod +x INSTALL.sh && ./INSTALL.sh && cd build && cp zsign /usr/local/bin"
 ```
 
 2. Clone this repo
