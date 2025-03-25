@@ -410,7 +410,8 @@ app.post(
       await fsp.writeFile(plistSavePath, manifest, 'utf8');
 
       const manifestUrl = new URL(`plist/${filename}`, UPLOAD_URL).toString();
-      const installLink = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestUrl)}`;
+      // Removed encodeURIComponent to eliminate encoding from the link
+      const installLink = `itms-services://?action=download-manifest&url=${manifestUrl}`;
 
       return res.json({ installLink });
     } catch (err) {
