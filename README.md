@@ -1,4 +1,4 @@
-# IPA Signing API (ALL CODE WAS WRITTEN USING CHATGPT O1 MINI/O1 shoutout to you :3)
+# IPA Signing API (ALL CODE WAS WRITTEN USING CHATGPT O1 MINI/O1 (and O3 mini >~<) shoutout to you :3)
 
 ## Max IPA upload size is 2GB you can change that in the code if you wanna use it for your own site/locally
 
