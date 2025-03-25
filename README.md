@@ -6,7 +6,11 @@
 
 1. Install Zsign
 ```bash
-sudo apt-get install -y git g++ pkg-config libssl-dev libminizip-dev && git clone https://github.com/zhlynn/zsign.git && cd zsign/build/linux && make clean && make && sudo cp ../../bin/zsign /usr/local/bin/zsign
+sudo apt-get install -y git g++ pkg-config libssl-dev libminizip-dev
+git clone https://github.com/zhlynn/zsign.git
+cd zsign/build/linux
+make clean && make
+sudo cp ../../bin/zsign /usr/local/bin/zsign
 ```
 
 2. Clone this repo
