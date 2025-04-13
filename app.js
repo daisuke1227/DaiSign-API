@@ -13,6 +13,7 @@ const cors = require('cors');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const winston = require('winston');
+const forge = require('node-forge'); // New: node-forge for certificate handling
 
 const {
   PORT = 4500,
@@ -191,6 +192,7 @@ function generateManifestPlist(ipaUrl, bundleId, bundleVersion, displayName) {
 </plist>`;
 }
 
+// Existing execPromise (still used by the signing worker)
 function execPromise(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
@@ -205,22 +207,72 @@ function execPromise(cmd) {
   });
 }
 
-async function checkCertificateValidity(p12Path, password = '') {
-  const pemPath = p12Path.replace('.p12', '.pem');
+/**
+ * New function to validate the .p12 using node-forge and check compatibility with the mobileprovision file.
+ */
+async function checkCertificateValidityAndCompatibility(p12Path, password = '', mpPath) {
   try {
-    const cmdConvert = password
-      ? `openssl pkcs12 -in "${p12Path}" -out "${pemPath}" -nodes -passin pass:${password}`
-      : `openssl pkcs12 -in "${p12Path}" -out "${pemPath}" -nodes -passin pass:`;
-    await execPromise(cmdConvert);
-    const cmdCheck = `openssl x509 -in "${pemPath}" -noout -dates`;
-    const checkOutput = await execPromise(cmdCheck);
-    logger.info(`Certificate dates:\n${checkOutput}`);
-  } catch (err) {
-    throw new Error('Invalid or expired certificate, or wrong password.');
-  } finally {
-    if (fs.existsSync(pemPath)) {
-      await fsp.unlink(pemPath);
+    // Read and parse the p12 file as binary
+    const p12Buffer = await fsp.readFile(p12Path);
+    const p12Der = p12Buffer.toString('binary');
+    const p12Asn1 = forge.asn1.fromDer(p12Der);
+    const p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, password);
+    const certBags = p12.getBags({ bagType: forge.pki.oids.certBag })[forge.pki.oids.certBag];
+    if (!certBags || certBags.length === 0) {
+      throw new Error('No certificate found in the p12 file.');
     }
+    const cert = certBags[0].cert;
+    // Compute fingerprint of the certificate
+    const certAsn1 = forge.pki.certificateToAsn1(cert);
+    const derCert = forge.asn1.toDer(certAsn1).getBytes();
+    const p12Fingerprint = forge.md.sha1.create().update(derCert).digest().toHex();
+
+    // Read and extract the plist XML from the mobileprovision file
+    const mpContent = await fsp.readFile(mpPath, 'utf8');
+    const plistStart = mpContent.indexOf('<?xml');
+    const plistEnd = mpContent.indexOf('</plist>');
+    if (plistStart === -1 || plistEnd === -1) {
+      throw new Error('Invalid mobileprovision file; unable to extract plist data.');
+    }
+    const plistStr = mpContent.substring(plistStart, plistEnd + 8); // include '</plist>'
+    const mpPlist = plist.parse(plistStr);
+
+    if (!mpPlist.DeveloperCertificates || !Array.isArray(mpPlist.DeveloperCertificates)) {
+      throw new Error('DeveloperCertificates not found in mobileprovision file.');
+    }
+
+    // Check each DeveloperCertificate in the mobileprovision file for a fingerprint match.
+    let matchFound = false;
+    for (const devCertData of mpPlist.DeveloperCertificates) {
+      let devCertBytes;
+      if (Buffer.isBuffer(devCertData)) {
+        devCertBytes = devCertData.toString('binary');
+      } else if (typeof devCertData === 'string') {
+        // Assume base64 encoded certificate
+        devCertBytes = Buffer.from(devCertData, 'base64').toString('binary');
+      } else {
+        continue;
+      }
+      try {
+        const devCertAsn1 = forge.asn1.fromDer(devCertBytes);
+        const devCert = forge.pki.certificateFromAsn1(devCertAsn1);
+        const devDer = forge.asn1.toDer(forge.pki.certificateToAsn1(devCert)).getBytes();
+        const devFingerprint = forge.md.sha1.create().update(devDer).digest().toHex();
+        if (devFingerprint === p12Fingerprint) {
+          matchFound = true;
+          break;
+        }
+      } catch (err) {
+        // If a certificate fails to parse, continue with the next one.
+        continue;
+      }
+    }
+
+    if (!matchFound) {
+      throw new Error('The certificate in the p12 file does not match any certificate in the mobileprovision file.');
+    }
+  } catch (err) {
+    throw new Error('Invalid certificate or password, or incompatible mobileprovision: ' + err.message);
   }
 }
 
@@ -306,11 +358,8 @@ app.post(
       );
 
       try {
-        if (p12Password) {
-          await checkCertificateValidity(p12Path, p12Password);
-        } else {
-          await checkCertificateValidity(p12Path, '');
-        }
+        // Use the new compatibility check instead of the previous OpenSSL method.
+        await checkCertificateValidityAndCompatibility(p12Path, p12Password, mpPath);
       } catch (certErr) {
         return res.status(400).json({
           error: certErr.message || 'Invalid certificate or password.',

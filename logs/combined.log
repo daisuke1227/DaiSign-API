@@ -1,0 +1,10 @@
+[2025-04-13T19:49:17.111Z] INFO: Server running on port 4600.
+[2025-04-13T19:56:08.829Z] INFO: Server running on port 4500.
+[2025-04-13T19:56:24.186Z] INFO: Server running on port 4500.
+[2025-04-13T19:57:16.585Z] INFO: Sign Request Received
+[2025-04-13T19:57:16.601Z] INFO: Received IPA: com.kdt.livecontainer.ipa
+[2025-04-13T19:57:16.608Z] INFO: Using temporary certs: p12 -> /home/dai1228/why/DaiSign-API/uploads/p12/cert_1744574236597_y2vy7m.p12, mp -> /home/dai1228/why/DaiSign-API/uploads/mp/app_1744574236597_y2vy7m.mobileprovision
+[2025-04-13T19:57:17.612Z] INFO: Signed IPA successfully created at: /home/dai1228/why/DaiSign-API/uploads/signed/signed_1744574236597_y2vy7m.ipa
+[2025-04-13T19:57:17.843Z] INFO: Removed uploaded IPA: /home/dai1228/why/DaiSign-API/uploads/temp/input_1744574236597_y2vy7m.ipa
+[2025-04-13T19:57:17.897Z] INFO: Removed temporary p12: /home/dai1228/why/DaiSign-API/uploads/p12/cert_1744574236597_y2vy7m.p12
+[2025-04-13T19:57:17.903Z] INFO: Removed temporary mobileprovision: /home/dai1228/why/DaiSign-API/uploads/mp/app_1744574236597_y2vy7m.mobileprovision
