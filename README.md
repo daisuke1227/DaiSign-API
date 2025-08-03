@@ -4,31 +4,40 @@
 
 ## HOW TO INSTALL
 
-i. Clone this repo
+1. **Clone the repository**
    ```bash
    git clone https://github.com/daisuke1227/DaiSign-API.git
    cd DaiSign-API
    ```
-ii. Install NodeJS/NPM
+
+2. **Install Node.js and npm**
    ```bash
-   sudo apt install nodejs -y
-   sudo apt install npm -y
+   sudo apt update
+   sudo apt install nodejs npm -y
    ```
-   3. Update NodeJS
-      ```bash
-      npm install -g n
-      n latest
-      ```
-   4. Install Node modules
-      ```bash
-      npm install
-      ```
-      5. rename .env and put all your configuration in there  
-   
-      6. Your all done yay! now run it
-         ```bash
-         node app.js
-         ```
+
+3. **(Optional but Recommended) Update Node.js to the latest version**
+   ```bash
+   sudo npm install -g n
+   sudo n latest
+   ```
+
+4. **Install project dependencies**
+   ```bash
+   npm install
+   ```
+
+5. **Configure environment variables**
+
+   Rename `.env.example` to `.env` and fill in your configuration details:
+   ```bash
+   mv .env.example .env
+   ```
+
+6. **Start the server**
+   ```bash
+   node app.js
+   ```
 Welcome to the Signing API! This API allows you to upload an IPA file, a `.p12` certificate, and a provisioning profile, and it returns a link to install the signed app.
 
 ## Features
