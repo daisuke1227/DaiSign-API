@@ -9,6 +9,10 @@
    git clone https://github.com/daisuke1227/DaiSign-API.git
    cd DaiSign-API
    ```
+1.5 **For linux users only make the "zsign" file executeable**   
+```bash
+chmod +x zsign
+```
 
 2. **Install Node.js and npm**
    ```bash
