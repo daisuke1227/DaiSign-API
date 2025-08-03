@@ -4,12 +4,12 @@
 
 ## HOW TO INSTALL
 
-1. Clone this repo
+i. Clone this repo
    ```bash
    git clone https://github.com/daisuke1227/DaiSign-API.git
    cd DaiSign-API
    ```
-2. Install NodeJS/NPM
+ii. Install NodeJS/NPM
    ```bash
    sudo apt install nodejs -y
    sudo apt install npm -y
