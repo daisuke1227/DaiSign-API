@@ -277,6 +277,7 @@ app.post(
       } else {
         return res.status(400).json({ error: 'An IPA file is required. No IPA was uploaded, and no valid default IPA is available.' });
       }
+
       const p12Password = (req.body.p12_password || '').trim();
       const saveCert = req.body.save_cert === 'on';
       if (!uniqueSuffix) uniqueSuffix = generateRandomSuffix();
@@ -285,17 +286,20 @@ app.post(
       await fsp.rename(req.files.p12[0].path, p12Path);
       await fsp.rename(req.files.mobileprovision[0].path, mpPath);
       logger.info(saveCert ? `Saved certs permanently: p12 -> ${p12Path}, mp -> ${mpPath}` : `Using temporary certs: p12 -> ${p12Path}, mp -> ${mpPath}`);
+
       try {
         await checkCertificateValidityAndCompatibility(p12Path, p12Password, mpPath);
       } catch (certErr) {
         return res.status(400).json({ error: certErr.message || 'Invalid certificate or password.' });
       }
+
       if (saveCert && p12Password) {
         const encryptedPwd = encrypt(p12Password);
         const pwdPath = path.join(WORK_DIR, 'p12', `password_${uniqueSuffix}.enc`);
         await fsp.writeFile(pwdPath, encryptedPwd, 'utf8');
         logger.info(`Saved encrypted password at: ${pwdPath}`);
       }
+
       signedIpaPath = path.join(WORK_DIR, 'signed', `signed_${uniqueSuffix}.ipa`);
       try {
         await signIpaInWorker({ p12Path, p12Password, mpPath, ipaPath, signedIpaPath });
@@ -310,7 +314,9 @@ app.post(
         logger.error(`zsign failed: ${zsignErr}`);
         return res.status(500).json({ error: 'Signing process failed. Check server logs.', details: zsignErr.message });
       }
+
       logger.info(`Signed IPA successfully created at: ${signedIpaPath}`);
+
       const zipSigned = new AdmZip(signedIpaPath);
       const zipEntries = zipSigned.getEntries();
       let appFolderName = '';
@@ -321,10 +327,13 @@ app.post(
           break;
         }
       }
+
       if (!appFolderName) return res.status(500).json({ error: "Couldn't find .app directory in the signed IPA." });
+
       const plistEntryPath = `Payload/${appFolderName}/Info.plist`;
       const plistEntry = zipSigned.getEntry(plistEntryPath);
       if (!plistEntry) return res.status(500).json({ error: 'Info.plist not found in the signed IPA.' });
+
       let plistData;
       const plistBuffer = plistEntry.getData();
       try {
@@ -339,6 +348,7 @@ app.post(
           return res.status(500).json({ error: 'Failed to parse Info.plist from signed IPA.' });
         }
       }
+
       const bundleId = plistData.CFBundleIdentifier || 'com.example.unknown';
       const bundleVersion = plistData.CFBundleVersion || '1.0.0';
       const displayName = plistData.CFBundleDisplayName || plistData.CFBundleName || 'App';
@@ -350,6 +360,29 @@ app.post(
       const manifestUrl = new URL(`plist/${filename}`, UPLOAD_URL).toString();
       const installLink = `itms-services://?action=download-manifest&url=${manifestUrl}`;
       res.json({ installLink });
+
+      setTimeout(async () => {
+        try {
+          if (fs.existsSync(signedIpaPath)) {
+            await fsp.unlink(signedIpaPath);
+            logger.info(`Deleted signed IPA after delay: ${signedIpaPath}`);
+          }
+        } catch (e) {
+          logger.error(`Failed to delete signed IPA: ${e}`);
+        }
+      }, 3600000);
+
+      setTimeout(async () => {
+        try {
+          if (fs.existsSync(plistSavePath)) {
+            await fsp.unlink(plistSavePath);
+            logger.info(`Deleted plist file after delay: ${plistSavePath}`);
+          }
+        } catch (e) {
+          logger.error(`Failed to delete plist file: ${e}`);
+        }
+      }, 3600000);
+
     } catch (err) {
       logger.error(`Error during signing process: ${err}`);
       return res.status(500).json({ error: 'Unexpected error during signing. Check server logs.', details: err.message });
@@ -370,10 +403,6 @@ app.post(
               await fsp.unlink(mpPath);
               logger.info(`Removed temporary mobileprovision: ${mpPath}`);
             }
-          }
-          if (signedIpaPath && fs.existsSync(signedIpaPath)) {
-            await fsp.unlink(signedIpaPath);
-            logger.info(`Removed signed IPA file: ${signedIpaPath}`);
           }
         }
       } catch (cleanupErr) {

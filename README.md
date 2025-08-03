@@ -4,37 +4,28 @@
 
 ## HOW TO INSTALL
 
-1. Install Zsign
-```bash
-sudo apt-get install -y git g++ pkg-config libssl-dev libminizip-dev
-git clone https://github.com/zhlynn/zsign.git
-cd zsign/build/linux
-make clean && make
-sudo cp ../../bin/zsign /usr/local/bin/zsign
-```
-
-2. Clone this repo
+1. Clone this repo
    ```bash
    git clone https://github.com/daisuke1227/DaiSign-API.git
    cd DaiSign-API
    ```
-3. Install NodeJS/NPM
+2. Install NodeJS/NPM
    ```bash
    sudo apt install nodejs -y
    sudo apt install npm -y
    ```
-   4. Update NodeJS
+   3. Update NodeJS
       ```bash
       npm install -g n
       n latest
       ```
-   5. Install Node modules
+   4. Install Node modules
       ```bash
       npm install
       ```
-      6. rename .env and put all your configuration in there  
+      5. rename .env and put all your configuration in there  
    
-      7. Your all done yay! now run it
+      6. Your all done yay! now run it
          ```bash
          node app.js
          ```
