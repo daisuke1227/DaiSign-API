@@ -1,8 +1,0 @@
-[2025-08-03T13:09:41.508Z] INFO: Server running on port 4500.
-[2025-08-03T13:09:45.383Z] INFO: Sign Request Received
-[2025-08-03T13:09:45.387Z] INFO: Received IPA: com.kdt.livecontainer.ipa
-[2025-08-03T13:09:45.391Z] INFO: Using temporary certs: p12 -> C:\Users\Johanna\Documents\GitHub\DaiSign-API\uploads\p12\cert_1754226585384_slgkcj.p12, mp -> C:\Users\Johanna\Documents\GitHub\DaiSign-API\uploads\mp\app_1754226585384_slgkcj.mobileprovision
-[2025-08-03T13:09:45.953Z] INFO: Signed IPA successfully created at: C:\Users\Johanna\Documents\GitHub\DaiSign-API\uploads\signed\signed_1754226585384_slgkcj.ipa
-[2025-08-03T13:09:45.978Z] INFO: Removed uploaded IPA: C:\Users\Johanna\Documents\GitHub\DaiSign-API\uploads\temp\input_1754226585384_slgkcj.ipa
-[2025-08-03T13:09:45.980Z] INFO: Removed temporary p12: C:\Users\Johanna\Documents\GitHub\DaiSign-API\uploads\p12\cert_1754226585384_slgkcj.p12
-[2025-08-03T13:09:45.982Z] INFO: Removed temporary mobileprovision: C:\Users\Johanna\Documents\GitHub\DaiSign-API\uploads\mp\app_1754226585384_slgkcj.mobileprovision
